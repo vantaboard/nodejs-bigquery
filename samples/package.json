@@ -2,6 +2,7 @@
   "name": "nodejs-docs-samples-bigquery",
   "files": [
     "*.js",
+    "lib/*.js",
     "resources/",
     "auth-user-sample/oauth2.keys.json"
   ],

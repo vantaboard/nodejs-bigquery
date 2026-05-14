@@ -14,6 +14,8 @@
 
 'use strict';
 
+const {getBigQueryClientOptions} = require('./lib/bigqueryEmulatorClientOptions');
+
 function main(region = 'my-region') {
   // [START bigquery_set_client_endpoint]
   // Import the Google Cloud client library
@@ -27,9 +29,12 @@ function main(region = 'my-region') {
      */
     // const region = 'my-region';
 
-    const bigquery = new BigQuery({
-      apiEndpoint: `${region}-bigquery.googleapis.com`,
-    });
+    const emulator = Boolean(process.env.BIGQUERY_EMULATOR_HOST);
+    const bigquery = emulator
+      ? new BigQuery(getBigQueryClientOptions())
+      : new BigQuery({
+          apiEndpoint: `${region}-bigquery.googleapis.com`,
+        });
 
     console.log('API Endpoint:');
     console.log(bigquery.apiEndpoint);

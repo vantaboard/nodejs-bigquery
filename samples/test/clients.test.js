@@ -20,6 +20,8 @@ const cp = require('child_process');
 
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
+const emulatorHost = process.env.BIGQUERY_EMULATOR_HOST;
+
 describe('Client', () => {
   it('should should set providedUserAgent', async () => {
     const output = execSync('node setUserAgent.js');
@@ -29,10 +31,18 @@ describe('Client', () => {
   it('should should set client endpoint', async () => {
     let output = execSync('node setClientEndpoint.js us-east4');
     assert.match(output, /API Endpoint:/);
-    assert.match(output, /https:\/\/us-east4-bigquery.googleapis.com/);
+    if (emulatorHost) {
+      assert.match(output, /http:\/\//);
+    } else {
+      assert.match(output, /https:\/\/us-east4-bigquery.googleapis.com/);
+    }
 
     output = execSync('node setClientEndpoint.js eu');
     assert.match(output, /API Endpoint:/);
-    assert.match(output, /https:\/\/eu-bigquery.googleapis.com/);
+    if (emulatorHost) {
+      assert.match(output, /http:\/\//);
+    } else {
+      assert.match(output, /https:\/\/eu-bigquery.googleapis.com/);
+    }
   });
 });

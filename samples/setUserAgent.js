@@ -14,12 +14,17 @@
 
 'use strict';
 
+const {getBigQueryClientOptions} = require('./lib/bigqueryEmulatorClientOptions');
+
 function main() {
   // [START bigquery_set_user_agent]
   // Import the Google Cloud client library
   const {BigQuery} = require('@google-cloud/bigquery');
   // Create a client and set the user agent
-  const bigquery = new BigQuery({userAgent: 'my-user-agent'});
+  const bigquery = new BigQuery({
+    ...getBigQueryClientOptions(),
+    userAgent: 'my-user-agent',
+  });
 
   console.log('User agent:');
   console.log(bigquery.providedUserAgent);
