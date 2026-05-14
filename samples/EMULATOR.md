@@ -35,9 +35,13 @@ endpoints as in the upstream samples.
 
 ## Full suite
 
-**`npm test`** runs all Mocha files under **`test/`** (integration-style: expects **GCP
-Application Default Credentials** and a project, or every test wired to the emulator). The
-parent repo’s default is **`task thirdparty:node-samples:bigquery-test`** (same as **`npm test`**).
+**`npm test`** runs all Mocha files under **`test/`**. Against **production GCP**, that path
+expects **Application Default Credentials** and a real project unless individual tests skip.
+With **`BIGQUERY_EMULATOR_HOST`** (and optional **`STORAGE_EMULATOR_HOST`**, gRPC endpoints, project
+id env vars)—as in this repo’s **`.envrc`** or **GitHub Actions**—requests go to **go-googlesql**’s
+BigQuery emulator and **fake-gcs-server** where the samples and client support it.
+
+The parent repo’s default task is **`task thirdparty:node-samples:bigquery-test`** (same as **`npm test`** here).
 
 For a narrow local or CI smoke without full GCP, use **`task thirdparty:node-samples:bigquery-test-clients`**
 (equivalent to **`npx mocha test/clients.test.js --timeout 200000 --require ./test/setup.js`** after **`npm install`**): endpoint / user-agent checks, and—when **`BIGQUERY_EMULATOR_HOST`**
