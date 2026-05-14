@@ -28,3 +28,10 @@ npx mocha test/clients.test.js --timeout 200000
 
 Without **`BIGQUERY_EMULATOR_HOST`**, the same tests assert regional **`*.googleapis.com`**
 endpoints as in the upstream samples.
+
+## Full suite
+
+The parent repo’s **`task thirdparty:node-samples:bigquery-test`** runs **`npm test`**, which
+executes all Mocha files under **`test/`** (integration-style; requires GCP ADC and a project,
+or a fully emulator-backed setup for every test). For a narrow local check, use the Mocha
+command above instead of **`npm test`**.
