@@ -14,7 +14,7 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "test": "mocha --timeout 200000",
+    "test": "mocha --timeout 200000 --require ./test/setup.js",
     "fix": "gts fix"
   },
   "dependencies": {

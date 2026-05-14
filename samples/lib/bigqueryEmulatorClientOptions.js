@@ -15,25 +15,24 @@
 'use strict';
 
 const {normalizeBigQueryEmulatorHost} = require('./normalizeBigQueryEmulatorHost');
+const {getSampleProjectId} = require('./sampleProjectEnv');
 
 // Matches api/datasets/host_region.go (go-googlesql emulator).
 const headerBigQueryEmulatorAPIRegion = 'X-BigQuery-Emulator-Api-Region';
 
 /**
- * Returns constructor options to merge into `new BigQuery({ ... })` when
- * BIGQUERY_EMULATOR_HOST is set (after normalizing scheme in env). Empty object
- * when the emulator host is unset.
+ * Returns constructor options to merge into `new BigQuery({ ... })`.
+ * When BIGQUERY_EMULATOR_HOST is set (after normalizing scheme in env), adds
+ * optional region interceptor. Includes explicit projectId whenever
+ * getSampleProjectId() resolves (same precedence as test/setup.js for ADC).
  */
 function getBigQueryClientOptions() {
   normalizeBigQueryEmulatorHost();
+  const projectId = getSampleProjectId();
+  const base = projectId ? {projectId} : {};
   if (!process.env.BIGQUERY_EMULATOR_HOST) {
-    return {};
+    return base;
   }
-  const projectId =
-    process.env.NODE_SAMPLES_PROJECT_ID ||
-    process.env.GOLANG_SAMPLES_PROJECT_ID ||
-    process.env.GOOGLE_CLOUD_PROJECT ||
-    process.env.GCLOUD_PROJECT;
   const region = process.env.BIGQUERY_EMULATOR_CLIENT_API_REGION;
   const interceptors_ = [];
   if (region) {
@@ -47,7 +46,7 @@ function getBigQueryClientOptions() {
     });
   }
   return {
-    ...(projectId ? {projectId} : {}),
+    ...base,
     ...(interceptors_.length ? {interceptors_} : {}),
   };
 }
