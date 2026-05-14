@@ -18,6 +18,9 @@ const {assert} = require('chai');
 const {describe, it} = require('mocha');
 const cp = require('child_process');
 
+const {BigQuery} = require('@google-cloud/bigquery');
+const {getBigQueryClientOptions} = require('../lib/bigqueryEmulatorClientOptions');
+
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const emulatorHost = process.env.BIGQUERY_EMULATOR_HOST;
@@ -45,4 +48,13 @@ describe('Client', () => {
       assert.match(output, /https:\/\/eu-bigquery.googleapis.com/);
     }
   });
+
+  if (emulatorHost) {
+    it('should run SELECT 1 against the emulator (HTTP smoke)', async function () {
+      this.timeout(20000);
+      const bigquery = new BigQuery({...getBigQueryClientOptions()});
+      const [rows] = await bigquery.query({query: 'SELECT 1 AS n', location: 'US'});
+      assert.strictEqual(rows[0].n, 1);
+    });
+  }
 });

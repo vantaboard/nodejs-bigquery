@@ -35,7 +35,12 @@ endpoints as in the upstream samples.
 
 ## Full suite
 
-The parent repo’s **`task thirdparty:node-samples:bigquery-test`** runs **`npm test`**, which
-executes all Mocha files under **`test/`** (integration-style; requires GCP ADC and a project,
-or a fully emulator-backed setup for every test). For a narrow local check, use the Mocha
-command above instead of **`npm test`**.
+**`npm test`** runs all Mocha files under **`test/`** (integration-style: expects **GCP
+Application Default Credentials** and a project, or every test wired to the emulator). The
+parent repo exposes that as **`task thirdparty:node-samples:bigquery-test-full`**.
+
+The default **`task thirdparty:node-samples:bigquery-test`** runs only **`test/clients.test.js`**
+(plus **`test/setup.js`**): endpoint / user-agent checks, and—when **`BIGQUERY_EMULATOR_HOST`**
+is set—a **`SELECT 1`** so the emulator process should log at least one HTTP request. The
+first two checks only construct **`BigQuery`** and print **`apiEndpoint`**; they do **not**
+open a TCP connection by themselves.
