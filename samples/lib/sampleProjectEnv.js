@@ -53,6 +53,8 @@ function getSampleProjectId() {
  * GCLOUD_PROJECT when those are unset.
  */
 function ensureGoogleAuthProjectEnv() {
+  const {normalizeBigQueryEmulatorHost} = require('./normalizeBigQueryEmulatorHost');
+  normalizeBigQueryEmulatorHost();
   const pid = getSampleProjectId();
   if (!pid) {
     return;
